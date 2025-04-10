@@ -1,0 +1,52 @@
+# === Java ===
+*.class
+*.jar
+*.war
+*.iml
+*.log
+*.hprof
+*.DS_Store
+/target/
+/build/
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+*.egg
+.env
+.venv/
+venv/
+Pipfile.lock
+
+# === Redis / DB dumps ===
+dump.rdb
+*.sqlite
+*.db
+
+# === IDEs & OS ===
+.idea/
+*.ipr
+*.iws
+.vscode/
+*.bak
+*.swp
+
+# === Node / UI (for future dashboard) ===
+node_modules/
+dist/
+
+# === Logs ===
+logs/
+*.log
+
+# === Docker & Compose ===
+.env
+*.pid
+
+# === Misc ===
+*.tmp
+*.orig
+*.rej
+
