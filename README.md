@@ -1,5 +1,7 @@
 # 🔐 Fraud Detection System – Swarajya Shield
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 A modular, real-world, AI-powered fraud detection system inspired by the strategy and structure of **Chhatrapati Shivaji Maharaj**'s legendary Swarajya.
 
 Each module is named after a warrior, strategist, or structure from the Maratha empire, symbolizing their unique role in defending digital finance.
@@ -59,3 +61,16 @@ Coming soon... once core modules are stable, we will open issues, label modules,
 ## 📜 License
 
 MIT License
+
+
+---
+
+## ⚠️ Disclaimer
+
+This project is a **work-in-progress research and learning initiative** inspired by real-world systems.  
+It is **not production-ready** and should be used for **educational or prototyping purposes only**.
+
+Any resemblance to actual fraud detection systems (e.g., Stripe, Razorpay, Adyen, etc.) is **purely for conceptual illustration** and does not reflect their internal designs or implementations.
+
+Licensed under the MIT License.
+
