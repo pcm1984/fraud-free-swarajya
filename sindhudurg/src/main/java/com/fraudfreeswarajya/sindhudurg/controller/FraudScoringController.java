@@ -2,6 +2,9 @@ package com.fraudfreeswarajya.sindhudurg.controller;
 
 import com.fraudfreeswarajya.sindhudurg.dto.TransactionRequest;
 import com.fraudfreeswarajya.sindhudurg.dto.TransactionResponse;
+import com.fraudfreeswarajya.sindhudurg.service.FraudScoringService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.fraudfreeswarajya.sindhudurg.model.RiskLevel;
 
@@ -12,9 +15,15 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class FraudScoringController {
 
+    private final FraudScoringService fraudScoringService;
+
+    public FraudScoringController(FraudScoringService fraudScoringService){
+        this.fraudScoringService = fraudScoringService;
+    }
+
     @PostMapping("/fraud-score")
-    public TransactionResponse scoreTransaction(@RequestBody TransactionRequest request) {
-        double dummyScore = Math.random(); // Simulated score
+    public TransactionResponse scoreTransaction(@Valid @RequestBody TransactionRequest request) {
+        double dummyScore = fraudScoringService.calculateScore(); // Simulated score
         RiskLevel riskLevel = getRiskLevel(dummyScore);
 
         return TransactionResponse.builder()

@@ -1,4 +1,4 @@
-package com.fraudfreeswarajya.sindhudurg.sindhudurg;
+package com.fraudfreeswarajya.sindhudurg;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
