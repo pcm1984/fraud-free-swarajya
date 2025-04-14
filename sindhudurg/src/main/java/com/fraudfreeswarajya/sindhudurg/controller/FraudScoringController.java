@@ -11,9 +11,14 @@ import com.fraudfreeswarajya.sindhudurg.model.RiskLevel;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/api/v1")
 public class FraudScoringController {
+
+    private static final Logger log = LoggerFactory.getLogger(FraudScoringController.class);
 
     private final FraudScoringService fraudScoringService;
 
@@ -25,13 +30,19 @@ public class FraudScoringController {
     public TransactionResponse scoreTransaction(@Valid @RequestBody TransactionRequest request) {
         double dummyScore = fraudScoringService.calculateScore(); // Simulated score
         RiskLevel riskLevel = getRiskLevel(dummyScore);
+        String recommendation = getRecommendation(riskLevel);
+        String transactionId = request.getTransactionId();
+
+        log.info("Scoring transaction: {}", transactionId);
+        log.info("Score: {}, RiskLevel: {}, Recommendation: {}",
+                dummyScore, riskLevel, recommendation);
 
         return TransactionResponse.builder()
-                .transactionId(request.getTransactionId())
+                .transactionId(transactionId)
                 .fraudScore(dummyScore)
                 .riskLevel(riskLevel)
                 .explanation(List.of("Simulated AI output"))
-                .recommendation(getRecommendation(riskLevel))
+                .recommendation(recommendation)
                 .build();
     }
 
