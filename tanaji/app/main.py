@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from app import model
+import logging
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Tanaji - AI Fraud Scorer", version="0.1")
 
@@ -20,11 +24,20 @@ class FraudScoreResponse(BaseModel):
 
 @app.post("/score", response_model=FraudScoreResponse)
 def score_transaction(request: TransactionRequest):
-    # Stubbed logic
-    dummy_score = 0.83
+    logger.info(f"Received fraud scoring request for {request.transaction_id}")
+    score = model.score_transaction(request)
+
+    explanation = []
+    if score > 0.8:
+       explanation.append("High risk score")
+    if request.amount > 1000:
+       explanation.append("High amount")
+
+    logger.info(f"Responding with score {score}, explanation: {explanation}")
+
     return FraudScoreResponse(
         transaction_id=request.transaction_id,
-        fraud_score=dummy_score,
-        explanation=["High amount", "Foreign IP"]
+        fraud_score=score,
+        explanation=explanation
     )
 
