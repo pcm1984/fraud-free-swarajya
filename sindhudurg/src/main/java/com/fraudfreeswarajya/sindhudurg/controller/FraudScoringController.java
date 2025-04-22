@@ -28,35 +28,6 @@ public class FraudScoringController {
 
     @PostMapping("/fraud-score")
     public TransactionResponse scoreTransaction(@Valid @RequestBody TransactionRequest request) {
-        double dummyScore = fraudScoringService.calculateScore(); // Simulated score
-        RiskLevel riskLevel = getRiskLevel(dummyScore);
-        String recommendation = getRecommendation(riskLevel);
-        String transactionId = request.getTransactionId();
-
-        log.info("Scoring transaction: {}", transactionId);
-        log.info("Score: {}, RiskLevel: {}, Recommendation: {}",
-                dummyScore, riskLevel, recommendation);
-
-        return TransactionResponse.builder()
-                .transactionId(transactionId)
-                .fraudScore(dummyScore)
-                .riskLevel(riskLevel)
-                .explanation(List.of("Simulated AI output"))
-                .recommendation(recommendation)
-                .build();
-    }
-
-    private RiskLevel getRiskLevel(double score) {
-        if (score >= 0.8) return RiskLevel.HIGH;
-        if (score >= 0.4) return RiskLevel.MEDIUM;
-        return RiskLevel.LOW;
-    }
-
-    private String getRecommendation(RiskLevel level) {
-        return switch (level) {
-            case HIGH -> "REJECT";
-            case MEDIUM -> "REVIEW";
-            case LOW -> "APPROVE";
-        };
+        return fraudScoringService.processTransaction(request);
     }
 }

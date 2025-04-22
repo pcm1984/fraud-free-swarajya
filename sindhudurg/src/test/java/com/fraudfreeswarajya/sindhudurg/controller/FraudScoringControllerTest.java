@@ -2,6 +2,8 @@ package com.fraudfreeswarajya.sindhudurg.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fraudfreeswarajya.sindhudurg.dto.TransactionRequest;
+import com.fraudfreeswarajya.sindhudurg.dto.TransactionResponse;
+import com.fraudfreeswarajya.sindhudurg.model.RiskLevel;
 import com.fraudfreeswarajya.sindhudurg.service.FraudScoringService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -18,7 +20,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -55,8 +59,30 @@ class FraudScoringControllerTest {
 
     @Test
     void shouldReturnHighRiskWhenScoreIsAbove80() throws Exception {
-        // Mock the score
-        Mockito.when(scoringService.calculateScore()).thenReturn(0.85);
+
+        TransactionRequest request = TransactionRequest.builder()
+                .transactionId("txn001")
+                .amount(new BigDecimal("1000.0"))
+                .currency("INR")
+                .cardNumberLast4("1234")
+                .deviceId("d001")
+                .ipAddress("192.168.1.1")
+                .location("risky")
+                .merchantId("m001")
+                .paymentMethod("risky")
+                .transactionTime(Instant.now())
+                .userId("user0001")
+                .build();
+
+
+        TransactionResponse mockResponse = TransactionResponse.builder()
+                .transactionId("txn001")
+                .fraudScore(0.90)
+                .riskLevel(RiskLevel.HIGH)
+                .explanation(List.of("High amount", "High risk score"))
+                .recommendation("REJECT")
+                .build();
+        Mockito.when(scoringService.processTransaction(any(TransactionRequest.class))).thenReturn(mockResponse);
 
         final MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.post(
                 "/api/v1/fraud-score"
@@ -70,7 +96,29 @@ class FraudScoringControllerTest {
 
     @Test
     void shouldReturnMediumRiskWhenScoreIsBetween40And80() throws Exception {
-        Mockito.when(scoringService.calculateScore()).thenReturn(0.60);
+        TransactionRequest request = TransactionRequest.builder()
+                .transactionId("txn001")
+                .amount(new BigDecimal("1000.0"))
+                .currency("INR")
+                .cardNumberLast4("1234")
+                .deviceId("d001")
+                .ipAddress("192.168.1.1")
+                .location("risky")
+                .merchantId("m001")
+                .paymentMethod("risky")
+                .transactionTime(Instant.now())
+                .userId("user0001")
+                .build();
+
+
+        TransactionResponse mockResponse = TransactionResponse.builder()
+                .transactionId("txn001")
+                .fraudScore(0.60)
+                .riskLevel(RiskLevel.HIGH)
+                .explanation(List.of("High amount", "High risk score"))
+                .recommendation("REVIEW")
+                .build();
+        Mockito.when(scoringService.processTransaction(any(TransactionRequest.class))).thenReturn(mockResponse);
 
         mockMvc.perform(post("/api/v1/fraud-score")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -82,7 +130,29 @@ class FraudScoringControllerTest {
 
     @Test
     void shouldReturnLowRiskWhenScoreIsBelow40() throws Exception {
-        Mockito.when(scoringService.calculateScore()).thenReturn(0.20);
+
+        TransactionRequest request = TransactionRequest.builder()
+                .transactionId("txn001")
+                .amount(new BigDecimal("1000.0"))
+                .currency("INR")
+                .cardNumberLast4("1234")
+                .deviceId("d001")
+                .ipAddress("192.168.1.1")
+                .location("risky")
+                .merchantId("m001")
+                .paymentMethod("risky")
+                .transactionTime(Instant.now())
+                .userId("user0001")
+                .build();
+
+
+        TransactionResponse mockResponse = TransactionResponse.builder()
+                .transactionId("txn001")
+                .fraudScore(0.11)
+                .riskLevel(RiskLevel.LOW)
+                .recommendation("APPROVE")
+                .build();
+        Mockito.when(scoringService.processTransaction(any(TransactionRequest.class))).thenReturn(mockResponse);
 
         mockMvc.perform(post("/api/v1/fraud-score")
                         .contentType(MediaType.APPLICATION_JSON)
