@@ -1,15 +1,9 @@
 import joblib
 import os
 import numpy as np
-import logging
+from app.logger_config import logger
+import pandas as pd
 
-# Configure basic logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
-
-logger = logging.getLogger(__name__)
 MODEL_PATH = os.getenv("MODEL_PATH", "app/fraud_model.pkl")
 
 # Load model at startup
@@ -28,8 +22,12 @@ def preprocess(request) -> list:
     return features
 
 def score_transaction(request):
-    features = np.array([preprocess(request)])
-    prob = model.predict_proba(features)[0][1]
+    features = preprocess(request)
+    
+    #Build a DataFrame with the same column names as training
+    df = pd.DataFrame([features], columns=["amount", "location_risk", "ip_risk"])
+
+    prob = model.predict_proba(df)[0][1]
     logger.info(f"Fraud score for txn {request.transaction_id}: {prob:.4f}")
     return round(prob, 4)
 
