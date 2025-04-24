@@ -10,7 +10,7 @@ public class WebClientConfig {
     @Bean
     public WebClient tanajiWebClient() {
         return WebClient.builder()
-                .baseUrl("http://localhost:8000")  // Or Docker URL later
+                .baseUrl("http://tanaji-api:8000")  // Or Docker URL later
                 .build();
     }
 }

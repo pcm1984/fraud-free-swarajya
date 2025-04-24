@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  ramchandrapant-db:
+    image: postgres:15
+    container_name: ramchandrapant-db
+    environment:
+      POSTGRES_DB: transactions_db
+      POSTGRES_USER: transactions_admin
+      POSTGRES_PASSWORD: transactions_secret
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  tanaji-api:
+    build:
+      context: ./tanaji
+    container_name: tanaji-api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ramchandrapant-db
+
+  sindhudurg-app:
+    build:
+      context: ./sindhudurg
+    container_name: sindhudurg-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - tanaji-api
+      - ramchandrapant-db
+
+volumes:
+  pgdata:
