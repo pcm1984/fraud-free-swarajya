@@ -38,11 +38,31 @@ Each module is named after a warrior, strategist, or structure from the Maratha 
 
 ## 🧪 Modules Under Construction
 
-### ✅ `sindhudurg/` – Fraud Scoring API
-- [x] Accepts transaction requests via REST
-- [x] Calculates fraud score
-- [x] Returns recommendation (APPROVE / REVIEW / REJECT)
-- [x] Built using BigDecimal & Instant for accuracy
+
+| Module                   | Status  | Description |
+|---------------------------|---------|-------------|
+| 🛡️ Sindhudurg (Java API)  | ✅ Completed (MVP) | Fraud Scoring API |
+| 🧠 Tanaji (Python AI Engine) | ✅ Completed (MVP) | ML-powered fraud risk scoring |
+| 🏰 Ramchandrapant (PostgreSQL) | ✅ Completed (MVP) | Master transaction database |
+| ⚡ Jiva (Redis Caching)    | ✅ Basic Integrated | Fast cache layer for recent transactions |
+| 📈 Kanhoji (Prometheus + Grafana) | ✅ MVP Integrated | Monitoring & Observability stack |
+| ⚖️ Dadoji (Rule Engine)   | 🚧 Planned | Rule-based risk analysis layer |
+| 🔄 Santaji (Feedback Learning) | 🚧 Planned | Historical learning and fraud trend adaptation |
+| 📊 Ashta Pradhan (Admin Dashboard) | 🚧 Planned | Admin web UI for fraud insights |
+| 🔐 Security Hardening (JWT, API keys) | 🚧 Planned | Service-to-service and public API security |
+
+---
+
+## 📚 Documentation
+
+| Topic | Link |
+|------|------|
+| Architecture Overview | Coming Soon |
+| [Monitoring: Kanhoji Observability (Prometheus + Grafana)](docs/02-kanhoji-prometheus-grafana.md) | 📊 ✅ Available |
+| Jiva Caching System | Coming Soon |
+| Database Design (Ramchandrapant) | Coming Soon |
+| Machine Learning Model (Tanaji) | Coming Soon |
+
 
 ---
 
