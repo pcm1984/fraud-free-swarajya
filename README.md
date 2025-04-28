@@ -74,3 +74,8 @@ Any resemblance to actual fraud detection systems (e.g., Stripe, Razorpay, Adyen
 
 Licensed under the MIT License.
 
+---
+
+## 📊 Monitoring
+
+- [Kanhoji Observability (Prometheus + Grafana)](docs/02-kanhoji-prometheus-grafana.md)

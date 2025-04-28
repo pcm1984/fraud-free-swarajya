@@ -1,0 +1,126 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "type": "dashboard",
+        "name": "Annotations & Alerts",
+        "enable": true
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "iteration": 1703500000000,
+  "panels": [
+    {
+      "type": "graph",
+      "title": "Request Count by URI",
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_requests_seconds_count[1m])) by (uri)",
+          "legendFormat": "{{uri}}",
+          "interval": "",
+          "refId": "A"
+        }
+      ],
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "graph",
+      "title": "Average Request Duration",
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_sum[1m]) / rate(http_server_requests_seconds_count[1m])",
+          "legendFormat": "avg duration",
+          "interval": "",
+          "refId": "B"
+        }
+      ],
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      }
+    },
+    {
+      "type": "graph",
+      "title": "JVM Memory Usage",
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{area=\"heap\"}",
+          "legendFormat": "Heap Memory",
+          "refId": "C"
+        },
+        {
+          "expr": "jvm_memory_used_bytes{area=\"nonheap\"}",
+          "legendFormat": "Non-Heap Memory",
+          "refId": "D"
+        }
+      ],
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      }
+    },
+    {
+      "type": "graph",
+      "title": "DB Connection Pool Usage",
+      "targets": [
+        {
+          "expr": "hikaricp_connections_active",
+          "legendFormat": "Active Connections",
+          "refId": "E"
+        },
+        {
+          "expr": "hikaricp_connections_max",
+          "legendFormat": "Max Connections",
+          "refId": "F"
+        }
+      ],
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      }
+    },
+    {
+      "type": "graph",
+      "title": "Garbage Collection Time",
+      "targets": [
+        {
+          "expr": "rate(jvm_gc_pause_seconds_sum[1m])",
+          "legendFormat": "GC Pause Time",
+          "refId": "G"
+        }
+      ],
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      }
+    }
+  ],
+  "schemaVersion": 36,
+  "title": "Swarajya Observability v1",
+  "version": 1,
+  "refresh": "10s"
+}
+
