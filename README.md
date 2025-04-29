@@ -99,6 +99,7 @@ Licensed under the MIT License.
 ## 📊 Monitoring
 
 - [Kanhoji Observability (Prometheus + Grafana)](docs/02-kanhoji-prometheus-grafana.md)
+- 🚧 Redis internal metrics exposure deferred for Post-MVP Roadmap (v1.1)
 
 ## 📚 Blogs
 
