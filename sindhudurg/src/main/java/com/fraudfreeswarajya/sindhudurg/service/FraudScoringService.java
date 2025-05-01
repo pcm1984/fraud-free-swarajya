@@ -1,5 +1,7 @@
 package com.fraudfreeswarajya.sindhudurg.service;
 
+import com.fraudfreeswarajya.sindhudurg.dadoji.RuleExecutor;
+import com.fraudfreeswarajya.sindhudurg.dadoji.dto.RuleDecision;
 import com.fraudfreeswarajya.sindhudurg.dto.TransactionRequest;
 import com.fraudfreeswarajya.sindhudurg.dto.TransactionResponse;
 import com.fraudfreeswarajya.sindhudurg.ramchandrapant.FraudTransactionEntity;
@@ -24,13 +26,18 @@ public class FraudScoringService {
     private FraudScoringClient fraudScoringClient;
 
     @Autowired
+    private RuleExecutor ruleExecutor;
+
+    @Autowired
     private FraudTransactionRepository fraudTransactionRepository;
 
 
     public TransactionResponse processTransaction(TransactionRequest request) {
 
 
-        TransactionResponse response = fraudScoringClient.getFraudScore(request);
+        TransactionResponse aiResponse = fraudScoringClient.getFraudScore(request);
+
+        RuleDecision decision = ruleExecutor.evaluateAll(request, aiResponse.getFraudScore(), aiResponse.getRiskIndicators());
 
         // Save to Postgres
         FraudTransactionEntity entity = FraudTransactionEntity.builder()
@@ -42,19 +49,19 @@ public class FraudScoringService {
                 .ipAddress(request.getIpAddress())
                 .merchantId(request.getMerchantId())
                 .timestamp(request.getTransactionTime())
-                .fraudScore(BigDecimal.valueOf(response.getFraudScore()))
-                .riskLevel(response.getRiskLevel())
-                .recommendation(response.getRecommendation())
+                .fraudScore(BigDecimal.valueOf(aiResponse.getFraudScore()))
+                .riskLevel(aiResponse.getRiskLevel())
+                .recommendation(aiResponse.getRecommendation())
                 .createdAt(Instant.now())
                 .build();
 
         fraudTransactionRepository.save(entity);
 
         log.info("Fraud score for txn {}: {} - Explanation: {}",
-                response.getTransactionId(),
-                response.getFraudScore(),
-                response.getExplanation());
+                aiResponse.getTransactionId(),
+                aiResponse.getFraudScore(),
+                aiResponse.getExplanation());
 
-        return response;
+        return aiResponse;
     }
 }

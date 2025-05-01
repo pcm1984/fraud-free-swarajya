@@ -51,6 +51,7 @@ public class FraudScoringClient {
                 .riskLevel(risk)
                 .explanation(res.getExplanation())
                 .recommendation(recommendation)
+                .riskIndicators(res.getRiskIndicators())
                 .build();
     }
 
