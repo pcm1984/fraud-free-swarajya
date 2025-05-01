@@ -4,12 +4,14 @@ import com.fraudfreeswarajya.sindhudurg.dadoji.dto.RuleDecision;
 import com.fraudfreeswarajya.sindhudurg.dto.TransactionRequest;
 import com.fraudfreeswarajya.sindhudurg.dadoji.rules.*;
 import com.fraudfreeswarajya.sindhudurg.model.RiskIndicator;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Component
 public class RuleExecutor {
 
     private final List<RuleEngine> rules = List.of(

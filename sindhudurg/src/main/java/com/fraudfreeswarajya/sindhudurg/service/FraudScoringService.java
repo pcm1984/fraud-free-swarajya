@@ -37,6 +37,12 @@ public class FraudScoringService {
 
         TransactionResponse aiResponse = fraudScoringClient.getFraudScore(request);
 
+        log.info("Fraud score for txn {}: {} - Explanation: {}, RiskIndicators: {}",
+                aiResponse.getTransactionId(),
+                aiResponse.getFraudScore(),
+                aiResponse.getExplanation(),
+                aiResponse.getRiskIndicators());
+
         RuleDecision decision = ruleExecutor.evaluateAll(request, aiResponse.getFraudScore(), aiResponse.getRiskIndicators());
 
         // Save to Postgres
@@ -57,10 +63,7 @@ public class FraudScoringService {
 
         fraudTransactionRepository.save(entity);
 
-        log.info("Fraud score for txn {}: {} - Explanation: {}",
-                aiResponse.getTransactionId(),
-                aiResponse.getFraudScore(),
-                aiResponse.getExplanation());
+
 
         return aiResponse;
     }

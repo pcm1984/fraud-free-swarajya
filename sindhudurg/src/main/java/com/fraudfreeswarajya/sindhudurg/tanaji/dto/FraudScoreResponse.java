@@ -10,5 +10,5 @@ public class FraudScoreResponse {
     private String transaction_id;
     private double fraud_score;
     private List<String> explanation;
-    private List<RiskIndicator> riskIndicators;
+    private List<RiskIndicator> risk_indicators;
 }
