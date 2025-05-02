@@ -4,6 +4,7 @@ import com.fraudfreeswarajya.sindhudurg.dadoji.RuleExecutor;
 import com.fraudfreeswarajya.sindhudurg.dadoji.dto.RuleDecision;
 import com.fraudfreeswarajya.sindhudurg.dto.TransactionRequest;
 import com.fraudfreeswarajya.sindhudurg.dto.TransactionResponse;
+import com.fraudfreeswarajya.sindhudurg.model.RiskLevel;
 import com.fraudfreeswarajya.sindhudurg.ramchandrapant.FraudTransactionEntity;
 import com.fraudfreeswarajya.sindhudurg.ramchandrapant.FraudTransactionRepository;
 import com.fraudfreeswarajya.sindhudurg.tanaji.FraudScoringClient;
@@ -35,7 +36,7 @@ public class FraudScoringService {
     public TransactionResponse processTransaction(TransactionRequest request) {
 
 
-        TransactionResponse aiResponse = fraudScoringClient.getFraudScore(request);
+        FraudScoreResponse aiResponse = fraudScoringClient.getFraudScore(request);
 
         log.info("Fraud score for txn {}: {} - Explanation: {}, RiskIndicators: {}",
                 aiResponse.getTransactionId(),
@@ -56,15 +57,39 @@ public class FraudScoringService {
                 .merchantId(request.getMerchantId())
                 .timestamp(request.getTransactionTime())
                 .fraudScore(BigDecimal.valueOf(aiResponse.getFraudScore()))
-                .riskLevel(aiResponse.getRiskLevel())
+                .riskLevel(RiskLevel.valueOf(aiResponse.getRiskLevel()))
                 .recommendation(aiResponse.getRecommendation())
                 .createdAt(Instant.now())
                 .build();
 
         fraudTransactionRepository.save(entity);
 
+        return mapToTransactionResponse(aiResponse);
+    }
 
+    private TransactionResponse mapToTransactionResponse(FraudScoreResponse res) {
+        RiskLevel risk = getRiskLevel(res.getFraudScore());
+        String recommendation = getRecommendation(res.getFraudScore());
 
-        return aiResponse;
+        return TransactionResponse.builder()
+                .transactionId(res.getTransactionId())
+                .fraudScore(res.getFraudScore())
+                .riskLevel(risk)
+                .explanation(res.getExplanation())
+                .recommendation(recommendation)
+                .riskIndicators(res.getRiskIndicators())
+                .build();
+    }
+
+    private RiskLevel getRiskLevel(double score) {
+        if (score >= 0.8) return RiskLevel.HIGH;
+        if (score >= 0.4) return RiskLevel.MEDIUM;
+        return RiskLevel.LOW;
+    }
+
+    private String getRecommendation(double score) {
+        if (score >= 0.8) return "REJECT or FLAG transaction";
+        if (score >= 0.4) return "REVIEW transaction";
+        return "APPROVE transaction";
     }
 }

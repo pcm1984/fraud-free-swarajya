@@ -15,7 +15,7 @@ public class FraudScoringClient {
 
     private final WebClient tanajiWebClient;
 
-    public TransactionResponse getFraudScore(TransactionRequest request) {
+    public FraudScoreResponse getFraudScore(TransactionRequest request) {
         FraudScoreRequest tanajiRequest = mapToTanajiRequest(request);
 
         FraudScoreResponse response = tanajiWebClient.post()
@@ -25,7 +25,7 @@ public class FraudScoringClient {
                 .bodyToMono(FraudScoreResponse.class)
                 .block();
 
-        return mapToTransactionResponse(response);
+        return response;
     }
 
     private FraudScoreRequest mapToTanajiRequest(TransactionRequest req) {
@@ -39,32 +39,6 @@ public class FraudScoringClient {
                 req.getMerchantId(),
                 req.getTransactionTime().toString()
         );
-    }
-
-    private TransactionResponse mapToTransactionResponse(FraudScoreResponse res) {
-        RiskLevel risk = getRiskLevel(res.getFraud_score());
-        String recommendation = getRecommendation(res.getFraud_score());
-
-        return TransactionResponse.builder()
-                .transactionId(res.getTransaction_id())
-                .fraudScore(res.getFraud_score())
-                .riskLevel(risk)
-                .explanation(res.getExplanation())
-                .recommendation(recommendation)
-                .riskIndicators(res.getRisk_indicators())
-                .build();
-    }
-
-    private RiskLevel getRiskLevel(double score) {
-        if (score >= 0.8) return RiskLevel.HIGH;
-        if (score >= 0.4) return RiskLevel.MEDIUM;
-        return RiskLevel.LOW;
-    }
-
-    private String getRecommendation(double score) {
-        if (score >= 0.8) return "REJECT or FLAG transaction";
-        if (score >= 0.4) return "REVIEW transaction";
-        return "APPROVE transaction";
     }
 }
 
