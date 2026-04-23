@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from app import model
+from typing import optional
+from datetime import datetime
 from app.logger_config import logger
 
 from fastapi import HTTPException
@@ -13,10 +15,13 @@ class TransactionRequest(BaseModel):
     user_id: str
     amount: float
     currency: str
+    payment_method: str
+    card_number_last4: str
+    transaction_time: datetime
     location: str
+    device_id: str
     ip_address: str
     merchant_id: str
-    timestamp: str
 
 class FraudScoreResponse(BaseModel):
     transaction_id: str
